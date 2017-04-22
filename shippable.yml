@@ -1,0 +1,10 @@
+language: go
+go:
+  - 1.7.5
+
+build:
+  ci:
+    - go get -v -d .
+    - (cd scrabbler-http && go get -v -d . )
+    - (cd scrabbler-http && go install)
+    - go test -v ./...
