@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "fullname" . }}-helm"
+  labels:
+    app: "{{ template "fullname" . }}-helm"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  ports:
+  - port: {{ .Values.service.helm.externalPort }}
+    targetPort: {{ .Values.service.helm.internalPort }}
+    protocol: TCP
+    name: {{ .Values.service.helm.portName }}
+  selector:
+    app: {{ template "fullname" . }}-helm

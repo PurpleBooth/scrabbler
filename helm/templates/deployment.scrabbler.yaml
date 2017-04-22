@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "{{ template "fullname" . }}-helm"
+  labels:
+    app: "{{ template "fullname" . }}-helm"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount.start }}
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname" . }}-helm"
+    spec:
+      containers:
+      - name: "{{ .Chart.Name }}-helm"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: NEW_RELIC_APP_NAME
+          value: {{ .Values.newRelic.appName }}
+        - name: NEW_RELIC_LICENSE_KEY
+          value: {{ .Values.newRelic.licenseKey }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port:  {{ .Values.service.helm.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port:  {{ .Values.service.helm.internalPort }}
+        resources:
+{{ toYaml .Values.resources.helm | indent 12 }}

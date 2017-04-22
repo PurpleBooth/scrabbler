@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "fullname" . }}-esp"
+  labels:
+    app: "{{ template "fullname" . }}-esp"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  type: {{ .Values.service.esp.type }}
+  ports:
+  - port: {{ .Values.service.esp.externalPort }}
+    targetPort: {{ .Values.service.esp.internalPort }}
+    protocol: TCP
+    name: {{ .Values.service.esp.portName }}
+  selector:
+    app: {{ template "fullname" . }}-esp

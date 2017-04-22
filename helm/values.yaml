@@ -1,0 +1,52 @@
+# Default values for fitness.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount:
+  start: 2
+  min: 1
+  max: 10
+  targetCPUUtilizationPercentage: 80
+
+image:
+  repository: eu.gcr.io/kube-test-1008/helm-api
+  tag: v0.1.1
+  pullPolicy: Always
+espImage:
+  repository: gcr.io/endpoints-release/endpoints-runtime
+  tag: 1
+  pullPolicy: Always
+
+service:
+  esp:
+    portName: http
+    type: NodePort
+    externalPort: 80
+    internalPort: 8080
+  scrabbler:
+    portName: http
+    externalPort: 8080
+    internalPort: 8080
+
+resources:
+  scrabbler:
+    limits:
+      cpu: 100m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 1024Mi
+  esp:
+    limits:
+      cpu: 100m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 1024Mi
+
+
+newRelic:
+  appName: 'helm-api.purplebooth.co.uk'
+  licenseKey: 'license key here'
+fqdn: 'helm-api.purplebooth.co.uk'
+googleEndpointVersion: '2019-01-01r0'

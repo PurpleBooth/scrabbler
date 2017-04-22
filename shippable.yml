@@ -8,3 +8,14 @@ build:
     - (cd scrabbler-http && go get -v -d . )
     - (cd scrabbler-http && go install)
     - go test -v ./...
+    - docker build -t eu.gcr.io/kube-test-1008/scrabbler-api:$(cat VERSION) .
+  post_ci:
+    - docker push eu.gcr.io/kube-test-1008/scrabbler-api:$(cat VERSION)
+
+integrations:
+  hub:
+    - integrationName: GCR
+      type: gcr
+      branches:
+        only:
+          - master

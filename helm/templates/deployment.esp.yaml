@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "{{ template "fullname" . }}-esp"
+  labels:
+    app: "{{ template "fullname" . }}-esp"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount.start }}
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname" . }}-esp"
+    spec:
+      containers:
+      - name: "{{ .Chart.Name }}-esp"
+        image: "{{ .Values.espImage.repository }}:{{ .Values.espImage.tag }}"
+        imagePullPolicy: {{ .Values.espImage.pullPolicy }}
+        args: [
+          "-p", "{{ .Values.service.esp.internalPort }}",
+          "-a", "{{ template "fullname" . }}-helm:{{ .Values.service.helm.externalPort }}",
+          "-s", "{{ .Values.googleEndpoint.serviceName }}",
+          "-v", "{{ .Values.googleEndpoint.version }}",
+        ]
+        ports:
+          - containerPort: {{ .Values.service.esp.internalPort }}
+        resources:
+{{ toYaml .Values.resources.esp | indent 12 }}
