@@ -17,8 +17,8 @@ var dictionary scrabbler.Dictionary
 var application newrelic.Application
 
 func main() {
-	nrName, _ := os.LookupEnv("NEW_RELIC_APP_NAME")
-	nrLicense, _ := os.LookupEnv("NEW_RELIC_LICENSE_KEY")
+	nrName := os.Getenv("NEW_RELIC_APP_NAME")
+	nrLicense := os.Getenv("NEW_RELIC_LICENSE_KEY")
 
 	dictionary = scrabbler.MakeDictionary(scrabbler.MakeAlphabet())
 	wordListFile := os.Args[1]
@@ -58,12 +58,12 @@ type HttpServer struct {
 }
 
 func (s HttpServer) Listen() {
-	nrName, nrNameEnv := os.LookupEnv("NEW_RELIC_APP_NAME")
-	nrLicense, nrLicenseEnv := os.LookupEnv("NEW_RELIC_LICENSE_KEY")
+	nrName := os.Getenv("NEW_RELIC_APP_NAME")
+	nrLicense := os.Getenv("NEW_RELIC_LICENSE_KEY")
 
 	router := httprouter.New()
 
-	if nrNameEnv && nrLicenseEnv {
+	if nrName != "" && nrLicense != "" {
 		config := newrelic.NewConfig(nrName, nrLicense)
 		var err error
 		application, err = newrelic.NewApplication(config)
